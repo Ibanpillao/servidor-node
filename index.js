@@ -70,7 +70,7 @@ app.post('/addMendiMartxa',(request, response) => {
     conexion.query(sql, martxaObj, error => {
         if (error) throw error;
         response.send("Mendimartxa añadida!");
-    }
+    });
 });
 
 // Actualizar
