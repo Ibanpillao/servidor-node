@@ -7,6 +7,24 @@ const app = express();
 
 app.use(bodyParser.json());
 
+// BBDD
+const conexion = mysql.createConnection({
+    host: 'us-cdbr-east-05.cleardb.net',
+    user: 'b77f4ba431fed6',
+    password: '73e16742',
+    database: 'heroku_980031004d924ce'
+});
+
+
+// const conexion = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'root',
+//     password: '',
+//     database: 'ud04'
+// });
+
+conexion.connect();
+
 // let users = [
 //     {
 //         id: 1,
@@ -21,12 +39,21 @@ app.use(bodyParser.json());
 // ];
 
 app.get('/', (request, response) => {
-    response.send('<h1>Ongi etorri</h1>');
+    response.send('Bizkaiko mendimartxak');
 });
 
 // all mendimartxas
 app.get('/mendimartxas',(request, response) => {
-    response.send("Lista de mendimartxas");
+    const sql = 'SELECT * FROM martxas';
+
+    conexion.query(sql, (err, resul) => {
+        if (err) throw err;
+        if (resul.length > 0) {
+            response.json(resul);
+        } else {
+            response.send('No hay datos');
+        }
+    });
 });
 
 // 1 mendimartxa
@@ -54,12 +81,5 @@ app.listen(PORT, () => {
     console.log(`Servidor oyendo en el puerto ${PORT}`);
 });
 
-// BBDD
-const conexion = mysql.createConnection({
-    host: 'us-cdbr-east-05.cleardb.net',
-    user: 'b77f4ba431fed6',
-    password: '73e16742',
-    database: 'heroku_980031004d924ce'
-});
 
-conexion.connect();
+
