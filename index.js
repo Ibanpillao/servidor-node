@@ -67,7 +67,7 @@ app.post('/addMendiMartxa',(request, response) => {
         distancia: request.body.distancia,
         fecha: request.body.fecha
     }
-    conexion.query(sql, martxaObj), error => {
+    conexion.query(sql, martxaObj, error => {
         if (error) throw error;
         response.send("Mendimartxa añadida!");
     }
