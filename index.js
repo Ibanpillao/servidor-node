@@ -45,18 +45,40 @@ app.get('/mendimartxas',(request, response) => {
 
 // 1 mendimartxa
 app.get('/mendimartxas/:id',(request, response) => {
-    response.send("Mendimartxa");
+    const {id} = request.params;
+    const sql = `SELECT * FROM mendimartxas WHERE idmartxas = ${id}`;
+
+    conexion.query(sql, (err, resul) => {
+        if (err) throw err;
+        if (resul.length > 0) {
+            response.json(resul);
+        } else {
+            response.send('No hay datos');
+        }
+    });
 });
 
-
+// Add mendimartxa
 app.post('/addMendiMartxa',(request, response) => {
-    response.send("Nueva mendimartxa");
+    const sql = "INSERT INTO mendimartxas SET ?";
+
+    const martxaObj = {
+        ciudad: request.body.ciudad,
+        distancia: request.body.ciudad,
+        fecha: request.body.fecha
+    }
+    conexion.query(sql, martxaObj), error => {
+        if (error) throw error;
+        response.send("Mendimartxa añadida!");
+    }
 });
 
+// Actualizar
 app.put('/update/:id',(request, response) => {
     response.send("Actualizar mendimartxa");
 });
 
+// Borrar
 app.delete('/borrar/:id',(request, response) => {
     response.send("Borrar mendimartxa");
 });
