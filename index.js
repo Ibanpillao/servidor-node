@@ -75,17 +75,28 @@ app.post('/addMendiMartxa',(request, response) => {
 
 // Actualizar
 app.put('/update/:id',(request, response) => {
-    response.send("Actualizar mendimartxa");
+    const {id} = request.params;
+    const {ciudad, distancia, fecha} = request.body;
+    const sql = `UPDATE mendimartxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}'`;
+    
+    conexion.query(sql, martxaObj), error => {
+        if (error) throw error;
+        response.send("Mendimartxa actualizada!");
+    }
+
 });
 
 // Borrar
 app.delete('/borrar/:id',(request, response) => {
-    response.send("Borrar mendimartxa");
+    const {id} = request.params;
+    const sql = `DELETE FROM mendimartxas WHERE idmartxas = ${id}`;
+
+    conexion.query(sql, martxaObj), error => {
+        if (error) throw error;
+        response.send("Mendimartxa borrada!");
+    }
 });
 
-app.get('/api/users', (request, response) => {
-    response.json(users);
-});
 
 app.listen(PORT, () => {
     console.log(`Servidor oyendo en el puerto ${PORT}`);
