@@ -46,7 +46,7 @@ app.get('/mendimartxas',(request, response) => {
 // 1 mendimartxa
 app.get('/mendimartxas/:id',(request, response) => {
     const {id} = request.params;
-    const sql = `SELECT * FROM mendimartxas WHERE idmartxas = ${id}`;
+    const sql = `SELECT * FROM martxas WHERE idmartxas = ${id}`;
 
     conexion.query(sql, (err, resul) => {
         if (err) throw err;
@@ -60,7 +60,7 @@ app.get('/mendimartxas/:id',(request, response) => {
 
 // Add mendimartxa
 app.post('/addMendiMartxa',(request, response) => {
-    const sql = "INSERT INTO mendimartxas SET ?";
+    const sql = "INSERT INTO martxas SET ?";
 
     const martxaObj = {
         ciudad: request.body.ciudad,
@@ -77,7 +77,7 @@ app.post('/addMendiMartxa',(request, response) => {
 app.put('/update/:id',(request, response) => {
     const {id} = request.params;
     const {ciudad, distancia, fecha} = request.body;
-    const sql = `UPDATE mendimartxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}'`;
+    const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}'`;
     
     conexion.query(sql, martxaObj), error => {
         if (error) throw error;
@@ -89,7 +89,7 @@ app.put('/update/:id',(request, response) => {
 // Borrar
 app.delete('/borrar/:id',(request, response) => {
     const {id} = request.params;
-    const sql = `DELETE FROM mendimartxas WHERE idmartxas = ${id}`;
+    const sql = `DELETE FROM martxas WHERE idmartxas = ${id}`;
 
     conexion.query(sql, martxaObj), error => {
         if (error) throw error;
