@@ -29,73 +29,73 @@ app.get('/', (request, response) => {
     response.send('Bizkaiko mendimartxak');
 });
 
-// all mendimartxas
-app.get('/mendimartxas',(request, response) => {
-    const sql = 'SELECT * FROM martxas';
+// // all mendimartxas
+// app.get('/mendimartxas',(request, response) => {
+//     const sql = 'SELECT * FROM martxas';
 
-    conexion.query(sql, (err, resul) => {
-        if (err) throw err;
-        if (resul.length > 0) {
-            response.json(resul);
-        } else {
-            response.send('No hay datos');
-        }
-    });
-});
+//     conexion.query(sql, (err, resul) => {
+//         if (err) throw err;
+//         if (resul.length > 0) {
+//             response.json(resul);
+//         } else {
+//             response.send('No hay datos');
+//         }
+//     });
+// });
 
-// 1 mendimartxa
-app.get('/mendimartxas/:id',(request, response) => {
-    const {id} = request.params;
-    const sql = `SELECT * FROM martxas WHERE idmartxas = ${id}`;
+// // 1 mendimartxa
+// app.get('/mendimartxas/:id',(request, response) => {
+//     const {id} = request.params;
+//     const sql = `SELECT * FROM martxas WHERE idmartxas = ${id}`;
 
-    conexion.query(sql, (err, resul) => {
-        if (err) throw err;
-        if (resul.length > 0) {
-            response.json(resul);
-        } else {
-            response.send('No hay datos');
-        }
-    });
-});
+//     conexion.query(sql, (err, resul) => {
+//         if (err) throw err;
+//         if (resul.length > 0) {
+//             response.json(resul);
+//         } else {
+//             response.send('No hay datos');
+//         }
+//     });
+// });
 
-// Add mendimartxa
-app.post('/addMendiMartxa',(request, response) => {
-    const sql = "INSERT INTO martxas SET ?";
+// // Add mendimartxa
+// app.post('/addMendiMartxa',(request, response) => {
+//     const sql = "INSERT INTO martxas SET ?";
 
-    const martxaObj = {
-        ciudad: request.body.ciudad,
-        distancia: request.body.ciudad,
-        fecha: request.body.fecha
-    }
-    conexion.query(sql, martxaObj), error => {
-        if (error) throw error;
-        response.send("Mendimartxa añadida!");
-    }
-});
+//     const martxaObj = {
+//         ciudad: request.body.ciudad,
+//         distancia: request.body.ciudad,
+//         fecha: request.body.fecha
+//     }
+//     conexion.query(sql, martxaObj), error => {
+//         if (error) throw error;
+//         response.send("Mendimartxa añadida!");
+//     }
+// });
 
-// Actualizar
-app.put('/update/:id',(request, response) => {
-    const {id} = request.params;
-    const {ciudad, distancia, fecha} = request.body;
-    const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}'`;
+// // Actualizar
+// app.put('/update/:id',(request, response) => {
+//     const {id} = request.params;
+//     const {ciudad, distancia, fecha} = request.body;
+//     const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}'`;
     
-    conexion.query(sql, martxaObj), error => {
-        if (error) throw error;
-        response.send("Mendimartxa actualizada!");
-    }
+//     conexion.query(sql, martxaObj), error => {
+//         if (error) throw error;
+//         response.send("Mendimartxa actualizada!");
+//     }
 
-});
+// });
 
-// Borrar
-app.delete('/borrar/:id',(request, response) => {
-    const {id} = request.params;
-    const sql = `DELETE FROM martxas WHERE idmartxas = ${id}`;
+// // Borrar
+// app.delete('/borrar/:id',(request, response) => {
+//     const {id} = request.params;
+//     const sql = `DELETE FROM martxas WHERE idmartxas = ${id}`;
 
-    conexion.query(sql, martxaObj), error => {
-        if (error) throw error;
-        response.send("Mendimartxa borrada!");
-    }
-});
+//     conexion.query(sql, martxaObj), error => {
+//         if (error) throw error;
+//         response.send("Mendimartxa borrada!");
+//     }
+// });
 
 
 app.listen(PORT, () => {
