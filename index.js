@@ -44,19 +44,19 @@ app.get('/mendimartxas',(request, response) => {
 });
 
 // // 1 mendimartxa
-// app.get('/mendimartxas/:id',(request, response) => {
-//     const {id } = request.params;
-//     const sql = `SELECT * FROM martxas WHERE idmartxas = ${id}`;
+app.get('/mendimartxas/:id',(request, response) => {
+    const {id } = request.params;
+    const sql = `SELECT * FROM martxas WHERE idmartxas = ${id}`;
 
-//     conexion.query(sql, (err, resul) => {
-//         if (err) throw err;
-//         if (resul.length > 0) {
-//             response.json(resul);
-//         } else {
-//             response.send('No hay datos');
-//         }
-//     });
-// });
+    conexion.query(sql, (err, resul) => {
+        if (err) throw err;
+        if (resul.length > 0) {
+            response.json(resul);
+        } else {
+            response.send('No hay datos');
+        }
+    });
+});
 
 // // Add mendimartxa
 app.post('/addMendiMartxa',(request, response) => {
