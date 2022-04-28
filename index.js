@@ -74,17 +74,17 @@ app.post('/addMendiMartxa',(request, response) => {
 });
 
 // Actualizar
-app.put('/update/:id',(request, response) => {
-    const {id} = request.params;
-    const {ciudad, distancia, fecha} = request.body;
-    const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}' WHERE idmartxas = $(id)`;
+// app.put('/update/:id',(request, response) => {
+//     const {id} = request.params;
+//     const {ciudad, distancia, fecha} = request.body;
+//     const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}' WHERE idmartxas = $(id)`;
     
-    conexion.query(sql, martxaObj, error => {
-        if (error) throw error;
-        response.send("Mendimartxa actualizada!");
-    });
+//     conexion.query(sql, martxaObj, error => {
+//         if (error) throw error;
+//         response.send("Mendimartxa actualizada!");
+//     });
 
-});
+// });
 
 // // Borrar
 // app.delete('/borrar/:id',(request, response) => {
