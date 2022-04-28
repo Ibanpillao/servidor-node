@@ -64,7 +64,7 @@ app.post('/addMendiMartxa',(request, response) => {
 
     const martxaObj = {
         ciudad: request.body.ciudad,
-        distancia: request.body.ciudad,
+        distancia: request.body.distancia,
         fecha: request.body.fecha
     }
     conexion.query(sql, martxaObj), error => {
