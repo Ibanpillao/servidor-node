@@ -87,15 +87,15 @@ app.put('/update/:id',(request, response) => {
 });
 
 // // Borrar
-app.delete('/borrar/:id',(request, response) => {
-    const {id} = request.params;
-    const sql = `DELETE FROM martxas WHERE idmartxas = ${id}`;
+// app.delete('/borrar/:id',(request, response) => {
+//     const {id} = request.params;
+//     const sql = `DELETE FROM martxas WHERE idmartxas = ${id}`;
 
-    conexion.query(sql, martxaObj, error => {
-        if (error) throw error;
-        response.send("Mendimartxa borrada!");
-    });
-});
+//     conexion.query(sql, martxaObj, error => {
+//         if (error) throw error;
+//         response.send("Mendimartxa borrada!");
+//     });
+// });
 
 
 app.listen(PORT, () => {
