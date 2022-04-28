@@ -73,7 +73,7 @@ app.post('/addMendiMartxa',(request, response) => {
     }
 });
 
-// // Actualizar
+// Actualizar
 // app.put('/update/:id',(request, response) => {
 //     const {id} = request.params;
 //     const {ciudad, distancia, fecha} = request.body;
