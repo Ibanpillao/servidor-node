@@ -91,7 +91,7 @@ app.delete('/borrar/:id',(request, response) => {
     const {id} = request.params;
     const sql = `DELETE FROM martxas WHERE idmartxas = ${id}`;
 
-    conexion.query(sql, martxaObj, error => {
+    conexion.query(sql, error => {
         if (error) throw error;
         response.send(`Mendimartxa ${id} borrada!`);
     });
