@@ -48,6 +48,7 @@ app.get('/mendimartxas/:id',(request, response) => {
     response.send("Mendimartxa");
 });
 
+
 app.post('/addMendiMartxa',(request, response) => {
     response.send("Nueva mendimartxa");
 });
