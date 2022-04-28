@@ -77,7 +77,7 @@ app.post('/addMendiMartxa',(request, response) => {
 app.put('/update/:id',(request, response) => {
     const {id} = request.params;
     const {ciudad, distancia, fecha} = request.body;
-    const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}' WHERE idmartxas = $(id)`;
+    const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}' WHERE idmartxas = ${id}`;
     
     conexion.query(sql, error => {
         if (error) throw error;
