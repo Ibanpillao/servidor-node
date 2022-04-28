@@ -43,35 +43,35 @@ app.get('/mendimartxas',(request, response) => {
     });
 });
 
-// 1 mendimartxa
-app.get('/mendimartxas/:id',(request, response) => {
-    const {id} = request.params;
-    const sql = `SELECT * FROM martxas WHERE idmartxas = ${id}`;
+// // 1 mendimartxa
+// app.get('/mendimartxas/:id',(request, response) => {
+//     const {id } = request.params;
+//     const sql = `SELECT * FROM martxas WHERE idmartxas = ${id}`;
 
-    conexion.query(sql, (err, resul) => {
-        if (err) throw err;
-        if (resul.length > 0) {
-            response.json(resul);
-        } else {
-            response.send('No hay datos');
-        }
-    });
-});
+//     conexion.query(sql, (err, resul) => {
+//         if (err) throw err;
+//         if (resul.length > 0) {
+//             response.json(resul);
+//         } else {
+//             response.send('No hay datos');
+//         }
+//     });
+// });
 
 // // Add mendimartxa
-// app.post('/addMendiMartxa',(request, response) => {
-//     const sql = "INSERT INTO martxas SET ?";
+app.post('/addMendiMartxa',(request, response) => {
+    const sql = "INSERT INTO martxas SET ?";
 
-//     const martxaObj = {
-//         ciudad: request.body.ciudad,
-//         distancia: request.body.ciudad,
-//         fecha: request.body.fecha
-//     }
-//     conexion.query(sql, martxaObj), error => {
-//         if (error) throw error;
-//         response.send("Mendimartxa añadida!");
-//     }
-// });
+    const martxaObj = {
+        ciudad: request.body.ciudad,
+        distancia: request.body.ciudad,
+        fecha: request.body.fecha
+    }
+    conexion.query(sql, martxaObj), error => {
+        if (error) throw error;
+        response.send("Mendimartxa añadida!");
+    }
+});
 
 // // Actualizar
 // app.put('/update/:id',(request, response) => {
