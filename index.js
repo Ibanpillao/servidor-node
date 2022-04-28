@@ -2,7 +2,7 @@
 const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3306;
 const app = express();
 
 app.use(bodyParser.json());
@@ -68,6 +68,3 @@ app.get('/api/users', (request, response) => {
 app.listen(PORT, () => {
     console.log(`Servidor oyendo en el puerto ${PORT}`);
 });
-
-
-
