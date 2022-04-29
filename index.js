@@ -2,18 +2,26 @@
 const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
-const PORT = process.env.PORT || 3306;
+const PORT = process.env.PORT || 3301;
 const app = express();
 
 app.use(bodyParser.json());
 
-// // BBDD
+// CONEXION HEROKU
 const conexion = mysql.createConnection({
     host: 'us-cdbr-east-05.cleardb.net',
     user: 'b77f4ba431fed6',
     password: '73e16742',
     database: 'heroku_980031004d924ce'
 });
+
+// CONEXION LOCAL
+// const conexion = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'root',
+//     password: '',
+//     database: 'app-martxas'
+// });
 
 conexion.connect();
 
@@ -58,7 +66,8 @@ app.post('/addMendiMartxa',(request, response) => {
         nombre: request.body.nombre,
         ciudad: request.body.ciudad,
         distancia: request.body.distancia,
-        fecha: request.body.fecha
+        fecha: request.body.fecha,
+        participantes: request.body.participantes
     }
     conexion.query(sql, martxaObj, error => {
         if (error) throw error;
@@ -70,7 +79,7 @@ app.post('/addMendiMartxa',(request, response) => {
 app.put('/update/:id',(request, response) => {
     const {id} = request.params;
     const {nombre, ciudad, distancia, fecha, participantes} = request.body;
-    const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}',nombre = '${nombre}',participantes = ${participantes} WHERE idmartxas = ${id}`;
+    const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}',nombre = '${nombre}',participantes = '${participantes}' WHERE idmartxas = ${id}`;
     
     conexion.query(sql, error => {
         if (error) throw error;
