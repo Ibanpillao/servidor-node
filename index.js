@@ -15,14 +15,6 @@ const conexion = mysql.createConnection({
     database: 'heroku_980031004d924ce'
 });
 
-
-// const conexion = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '',
-//     database: 'ud04'
-// });
-
 conexion.connect();
 
 app.get('/', (request, response) => {
