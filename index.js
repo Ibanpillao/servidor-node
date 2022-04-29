@@ -8,14 +8,14 @@ const app = express();
 app.use(bodyParser.json());
 
 // // BBDD
-const conexion = mysql.createPool({
+const conexion = mysql.createConnection({
     host: 'us-cdbr-east-05.cleardb.net',
     user: 'b77f4ba431fed6',
     password: '73e16742',
     database: 'heroku_980031004d924ce'
 });
 
-// conexion.connect();
+conexion.connect();
 
 app.get('/', (request, response) => {
     response.send('Bizkaiko mendimartxak');
