@@ -2,7 +2,7 @@
 const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
-const PORT = process.env.PORT || 3050;
+const PORT = process.env.PORT || 3306;
 const app = express();
 
 app.use(bodyParser.json());
@@ -50,44 +50,44 @@ app.get('/mendimartxas/:id',(request, response) => {
     });
 });
 
-// // // Add mendimartxa
-// app.post('/addMendiMartxa',(request, response) => {
-//     const sql = "INSERT INTO martxas SET ?";
+// Add mendimartxa
+app.post('/addMendiMartxa',(request, response) => {
+    const sql = "INSERT INTO martxas SET ?";
 
-//     const martxaObj = {
-//         nombre: request.body.nombre,
-//         ciudad: request.body.ciudad,
-//         distancia: request.body.distancia,
-//         fecha: request.body.fecha
-//     }
-//     conexion.query(sql, martxaObj, error => {
-//         if (error) throw error;
-//         response.send("Mendimartxa añadida!");
-//     });
-// });
+    const martxaObj = {
+        nombre: request.body.nombre,
+        ciudad: request.body.ciudad,
+        distancia: request.body.distancia,
+        fecha: request.body.fecha
+    }
+    conexion.query(sql, martxaObj, error => {
+        if (error) throw error;
+        response.send("Mendimartxa añadida!");
+    });
+});
 
-// // Actualizar
-// app.put('/update/:id',(request, response) => {
-//     const {id} = request.params;
-//     const {nombre, ciudad, distancia, fecha} = request.body;
-//     const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}',nombre = '${nombre},  WHERE idmartxas = ${id}`;
+// Actualizar
+app.put('/update/:id',(request, response) => {
+    const {id} = request.params;
+    const {nombre, ciudad, distancia, fecha} = request.body;
+    const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}',nombre = '${nombre},  WHERE idmartxas = ${id}`;
     
-//     conexion.query(sql, error => {
-//         if (error) throw error;
-//         response.send(`Mendimartxa ${id} actualizada!`);
-//     });
-// });
+    conexion.query(sql, error => {
+        if (error) throw error;
+        response.send(`Mendimartxa ${id} actualizada!`);
+    });
+});
 
-// // // Borrar
-// app.delete('/borrar/:id',(request, response) => {
-//     const {id} = request.params;
-//     const sql = `DELETE FROM martxas WHERE idmartxas = ${id}`;
+// Borrar
+app.delete('/borrar/:id',(request, response) => {
+    const {id} = request.params;
+    const sql = `DELETE FROM martxas WHERE idmartxas = ${id}`;
 
-//     conexion.query(sql, error => {
-//         if (error) throw error;
-//         response.send(`Mendimartxa ${id} borrada!`);
-//     });
-// });
+    conexion.query(sql, error => {
+        if (error) throw error;
+        response.send(`Mendimartxa ${id} borrada!`);
+    });
+});
 
 
 app.listen(PORT, () => {
