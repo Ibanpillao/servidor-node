@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // CONEXION HEROKU
-const conexion = mysql.createConnection({
+const conexion = mysql.createPool({
     host: 'us-cdbr-east-05.cleardb.net',
     user: 'b77f4ba431fed6',
     password: '73e16742',
@@ -23,7 +23,7 @@ const conexion = mysql.createConnection({
 //     database: 'app-martxas'
 // });
 
-conexion.connect();
+// conexion.connect();
 
 app.get('/', (request, response) => {
     response.send('Bizkaiko mendimartxak');
