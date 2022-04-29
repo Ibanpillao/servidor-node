@@ -37,7 +37,7 @@ app.get('/mendimartxas',(request, response) => {
 
 // // 1 mendimartxa
 app.get('/mendimartxas/:id',(request, response) => {
-    const {id } = request.params;
+    const {id} = request.params;
     const sql = `SELECT * FROM martxas WHERE idmartxas = ${id}`;
 
     conexion.query(sql, (err, resul) => {
@@ -90,6 +90,6 @@ app.get('/mendimartxas/:id',(request, response) => {
 // });
 
 
-// app.listen(PORT, () => {
-//     console.log(`Servidor oyendo en el puerto ${PORT}`);
-// });
+app.listen(PORT, () => {
+    console.log(`Servidor oyendo en el puerto ${PORT}`);
+});
