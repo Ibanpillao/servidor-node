@@ -38,7 +38,7 @@ app.get('/', (request, response) => {
 
 // // all mendimartxas
 app.get('/mendimartxas',(request, response) => {
-    const sql = 'SELECT * FROM martxas ORDER BY "fecha"';
+    const sql = 'SELECT * FROM martxas ORDER BY fecha';
 
     conexion.query(sql, (err, resul) => {
         if (err) throw err;
