@@ -51,33 +51,39 @@ app.post('/registro-usuario',(request, response) => {
         password : hash
     }
 
-    conexion.query(sql, user, error => {
-        if (error) throw error;
-        response.send("Usuario añadido!");
-    });
+    if (!login()) {
+        conexion.query(sql, user, error => {
+            if (error) throw error;
+            response.send("Usuario añadido!");
+        });
+    } else response.send('Usuario ya registrado!');
 });
 
 // Login usuario
-app.post('/login-usuario',(request, response) => {
+function login() {
+    app.post('/login-usuario',(request, response) => {
 
-    const hash = crypto.createHash('sha256',request.body.password).digest('hex');
+        const hash = crypto.createHash('sha256',request.body.password).digest('hex');
 
-    const user = {
-        nombre : request.body.nombre,
-        password : hash
-    }
-
-    const sql = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}' AND password = '${user.password}'`;
-
-    conexion.query(sql, (error, resul) => {
-        if (error) throw error;
-        if (resul.length > 0) {
-            response.send('Usuario logueado con éxito!');
-        } else {
-            response.send('Regístrese!');
+        const user = {
+            nombre : request.body.nombre,
+            password : hash
         }
+
+        const sql = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}' AND password = '${user.password}'`;
+
+        conexion.query(sql, (error, resul) => {
+            if (error) throw error;
+            if (resul.length > 0) {
+                response.send('Usuario logueado con éxito!');
+                return true;
+            } else {
+                response.send('Regístrese!');
+                return false;
+            }
+        });
     });
-});
+}
 
 // all mendimartxas
 app.get('/mendimartxas',(request, response) => {
