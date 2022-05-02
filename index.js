@@ -43,24 +43,29 @@ app.get('/', (request, response) => {
 app.post('/registro-usuario',(request, response) => {
 
     const hash = crypto.createHash('sha256',request.body.password).digest('hex');
-
-    const sql = 'INSERT INTO usuarios SET ?';
-
+    const sql2 = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}' AND password = '${user.password}'`;
     const user = {
         nombre : request.body.nombre,
         password : hash
     }
+    
+    conexion.query(sql2, (error, resul) => {
+        if (error) throw error;
+        if (resul.length > 0) {
+            response.send('Usuario ya registrado!');
+            return;
+        } 
+    });
 
-    if (!login()) {
-        conexion.query(sql, user, error => {
-            if (error) throw error;
-            response.send("Usuario añadido!");
-        });
-    } else response.send('Usuario ya registrado!');
+    const sql = 'INSERT INTO usuarios SET ?';
+
+    conexion.query(sql, user, error => {
+        if (error) throw error;
+        response.send("Usuario añadido!");
+    });
 });
 
 // Login usuario
-function login() {
     app.post('/login-usuario',(request, response) => {
 
         const hash = crypto.createHash('sha256',request.body.password).digest('hex');
@@ -83,7 +88,6 @@ function login() {
             }
         });
     });
-}
 
 // all mendimartxas
 app.get('/mendimartxas',(request, response) => {
