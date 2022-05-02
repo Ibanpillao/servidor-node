@@ -40,7 +40,7 @@ app.get('/', (request, response) => {
 });
 
 // insertar usuario bbdd
-app.post('/login',(request, response) => {
+app.post('/registro-usuario',(request, response) => {
 
     const hash = crypto.createHash('sha256',request.body.password).digest('hex');
 
@@ -54,6 +54,27 @@ app.post('/login',(request, response) => {
     conexion.query(sql, user, error => {
         if (error) throw error;
         response.send("Usuario añadido!");
+    });
+});
+
+// Seleccionar usuario
+app.post('/login-usuario',(request, response) => {
+
+    const user = {
+        nombre : request.body.nombre,
+        password : hash
+    }
+
+    const sql = `SELECT * FROM usuarios WHERE nombre = ${user.nombre} AND password = ${user.password}`;
+
+    conexion.query(sql, (error, resul) => {
+        if (error) throw error;
+        if (resul.length > 0) {
+            response.json(resul);
+            response.send('Usuario logueado con éxito');
+        } else {
+            response.send('Regístrese!');
+        }
     });
 });
 
