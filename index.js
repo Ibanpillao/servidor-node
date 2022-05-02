@@ -59,6 +59,8 @@ app.post('/registro-usuario',(request, response) => {
 
 // Seleccionar usuario
 app.post('/login-usuario',(request, response) => {
+    
+    const hash = crypto.createHash('sha256',request.body.password).digest('hex');
 
     const user = {
         nombre : request.body.nombre,
