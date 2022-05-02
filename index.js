@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3301;
 const app = express();
 const crypto = require("crypto");
+const hash = "";
 // const hash = crypto.createHash('sha256',secret).digest('hex');
 
 app.use(bodyParser.json());
@@ -42,7 +43,7 @@ app.get('/', (request, response) => {
 // // Registro usuario
 app.post('/registro-usuario',(request, response) => {
 
-    const hash = crypto.createHash('sha256',request.body.password).digest('hex');
+    hash = crypto.createHash('sha256',request.body.password).digest('hex');
     const user = {
         nombre : request.body.nombre,
         password : hash
@@ -69,7 +70,7 @@ app.post('/registro-usuario',(request, response) => {
 // Login usuario
     app.post('/login-usuario',(request, response) => {
 
-        const hash = crypto.createHash('sha256',request.body.password).digest('hex');
+        hash = crypto.createHash('sha256',request.body.password).digest('hex');
 
         const user = {
             nombre : request.body.nombre,
