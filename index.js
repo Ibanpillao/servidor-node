@@ -43,17 +43,17 @@ app.get('/', (request, response) => {
 app.post('/registro-usuario',(request, response) => {
 
     const hash = crypto.createHash('sha256',request.body.password).digest('hex');
-    const sql2 = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}' AND password = '${user.password}'`;
     const user = {
         nombre : request.body.nombre,
         password : hash
     }
+    const sql2 = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}' AND password = '${user.password}'`;
+    
     
     conexion.query(sql2, (error, resul) => {
         if (error) throw error;
         if (resul.length > 0) {
             response.send('Usuario ya registrado!');
-            return;
         } 
     });
 
@@ -81,10 +81,8 @@ app.post('/registro-usuario',(request, response) => {
             if (error) throw error;
             if (resul.length > 0) {
                 response.send('Usuario logueado con éxito!');
-                return true;
             } else {
                 response.send('Regístrese!');
-                return false;
             }
         });
     });
