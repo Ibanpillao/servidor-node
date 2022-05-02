@@ -39,25 +39,25 @@ app.get('/', (request, response) => {
     response.send('Bizkaiko mendimartxak');
 });
 
-// insertar usuario bbdd
-app.post('/registro-usuario',(request, response) => {
+// // Registro usuario
+// app.post('/registro-usuario',(request, response) => {
 
-    const hash = crypto.createHash('sha256',request.body.password).digest('hex');
+//     const hash = crypto.createHash('sha256',request.body.password).digest('hex');
 
-    const sql = 'INSERT INTO usuarios SET ?';
+//     const sql = 'INSERT INTO usuarios SET ?';
 
-    const user = {
-        nombre : request.body.nombre,
-        password : hash
-    }
+//     const user = {
+//         nombre : request.body.nombre,
+//         password : hash
+//     }
 
-    conexion.query(sql, user, error => {
-        if (error) throw error;
-        response.send("Usuario añadido!");
-    });
-});
+//     conexion.query(sql, user, error => {
+//         if (error) throw error;
+//         response.send("Usuario añadido!");
+//     });
+// });
 
-// Seleccionar usuario
+// Login usuario
 app.post('/login-usuario',(request, response) => {
 
     const hash = crypto.createHash('sha256',request.body.password).digest('hex');
