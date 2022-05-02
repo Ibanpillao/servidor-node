@@ -59,7 +59,7 @@ app.post('/registro-usuario',(request, response) => {
 
 // Seleccionar usuario
 app.post('/login-usuario',(request, response) => {
-    
+
     const hash = crypto.createHash('sha256',request.body.password).digest('hex');
 
     const user = {
@@ -67,7 +67,7 @@ app.post('/login-usuario',(request, response) => {
         password : hash
     }
 
-    const sql = `SELECT * FROM usuarios WHERE nombre = ${user.nombre} AND password = ${user.password}`;
+    const sql = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}' AND password = '${user.password}'`;
 
     conexion.query(sql, (error, resul) => {
         if (error) throw error;
