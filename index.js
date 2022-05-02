@@ -4,6 +4,8 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3301;
 const app = express();
+const crypto = require("crypto");
+// const hash = crypto.createHash('sha256',secret).digest('hex');
 
 app.use(bodyParser.json());
 
@@ -32,11 +34,30 @@ const conexion = mysql.createPool({
 
 // conexion.connect();
 
+// API - home
 app.get('/', (request, response) => {
     response.send('Bizkaiko mendimartxak');
 });
 
-// // all mendimartxas
+// insertar usuario bbdd
+app.post('/login',(request, response) => {
+
+    const hash = crypto.createHash('sha256',request.body.password).digest('hex');
+
+    const sql = 'INSERT INTO usuario SET ?';
+
+    const user = {
+        nombre : request.body.nombre,
+        password : hash
+    }
+
+    conexion.query(sql, user, error => {
+        if (error) throw error;
+        response.send("Usuario añadido!");
+    });
+});
+
+// all mendimartxas
 app.get('/mendimartxas',(request, response) => {
     const sql = 'SELECT * FROM martxas ORDER BY fecha';
 
@@ -50,7 +71,7 @@ app.get('/mendimartxas',(request, response) => {
     });
 });
 
-// // 1 mendimartxa
+// 1 mendimartxa
 app.get('/mendimartxas/:id',(request, response) => {
     const {id} = request.params;
     const sql = `SELECT * FROM martxas WHERE idmartxas = ${id}`;
