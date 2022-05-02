@@ -54,16 +54,16 @@ app.post('/registro-usuario',(request, response) => {
         if (error) throw error;
         if (resul.length > 0) {
             response.send('Usuario ya registrado!');
-            return false;
-        }  
+        } else {
+            const sql = 'INSERT INTO usuarios SET ?';
+
+            conexion.query(sql, user, error => {
+                if (error) throw error;
+                response.send("Usuario añadido!");
+            });
+        }
     });
 
-    const sql = 'INSERT INTO usuarios SET ?';
-
-    conexion.query(sql, user, error => {
-        if (error) throw error;
-        response.send("Usuario añadido!");
-    });
 });
 
 // Login usuario
