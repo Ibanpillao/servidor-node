@@ -54,8 +54,8 @@ app.post('/registro-usuario',(request, response) => {
         if (error) throw error;
         if (resul.length > 0) {
             response.send('Usuario ya registrado!');
-            return;
-        } 
+            return false;
+        }  
     });
 
     const sql = 'INSERT INTO usuarios SET ?';
