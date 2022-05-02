@@ -44,7 +44,7 @@ app.post('/login',(request, response) => {
 
     const hash = crypto.createHash('sha256',request.body.password).digest('hex');
 
-    const sql = 'INSERT INTO usuario SET ?';
+    const sql = 'INSERT INTO usuarios SET ?';
 
     const user = {
         nombre : request.body.nombre,
