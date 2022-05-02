@@ -73,7 +73,6 @@ app.post('/login-usuario',(request, response) => {
         if (error) throw error;
         if (resul.length > 0) {
             response.json(resul);
-            response.send('Usuario logueado con éxito');
         } else {
             response.send('Regístrese!');
         }
