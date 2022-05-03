@@ -48,6 +48,15 @@ app.post('/registro-usuario',(request, response) => {
         password : request.body.password
     }
 
+    let palabraSecretaHasheada = '$2a$10$vUzrXVaE9LCZdRTTA3fYUuWkYlhK0bL38p4FKrMbvMcCeDOkqsypa';
+
+    bcrypt.compare(user.password, palabraSecretaHasheada, (err, resp) => {
+        if (err) {
+            console.log("Error:", err);
+        } else {
+            console.log(resp);
+       
+
     let klabea = user.password;
 
     bcrypt.hash(klabea, saltos,(err, klabea) => {
@@ -71,6 +80,9 @@ app.post('/registro-usuario',(request, response) => {
             });
         }
     });
+
+}
+});
 
 });
 
