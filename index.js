@@ -5,8 +5,8 @@ const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3301;
 const app = express();
 const crypto = require("crypto");
-const hash = "";
-// const hash = crypto.createHash('sha256',secret).digest('hex');
+const bcrypt = require("bcryptjs");
+const saltos = 10; // Rondas bcryptjs
 
 app.use(bodyParser.json());
 
@@ -43,11 +43,18 @@ app.get('/', (request, response) => {
 // // Registro usuario
 app.post('/registro-usuario',(request, response) => {
 
-    hash = crypto.createHash('sha256',request.body.password).digest('hex');
     const user = {
         nombre : request.body.nombre,
-        password : hash
+        password : request.body.password
     }
+
+    let klabea = user.password;
+
+    bcrypt.hash(klabea, saltos,(err, klabea) => {
+        user.password = klabea;
+    });
+    
+   
     const sql2 = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}' AND password = '${user.password}'`;
     
     
@@ -70,7 +77,7 @@ app.post('/registro-usuario',(request, response) => {
 // Login usuario
     app.post('/login-usuario',(request, response) => {
 
-        hash = crypto.createHash('sha256',request.body.password).digest('hex');
+        const hash = crypto.createHash('sha256',request.body.password).digest('hex');
 
         const user = {
             nombre : request.body.nombre,
