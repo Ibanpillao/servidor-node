@@ -63,7 +63,7 @@ app.post('/registro-usuario',(request, response) => {
             console.log("Error:", err);
         } else {       
 
-            if (!resp) {
+            if (resp == false) {
                 let klabea = user.password;
 
                 bcrypt.hash(klabea, saltos,(err, klabea) => {
