@@ -48,42 +48,40 @@ app.post('/registro-usuario',(request, response) => {
         password : request.body.password
     }
 
-    let palabraSecretaHasheada = '$2a$10$vUzrXVaE9LCZdRTTA3fYUuWkYlhK0bL38p4FKrMbvMcCeDOkqsypa';
+    let sql = `SELECT password FROM usuarios WHERE nombre = '${user.nombre}'`;
+    let klabea = '';
 
-    bcrypt.compare(user.password, palabraSecretaHasheada, (err, resp) => {
-        if (err) {
-            console.log("Error:", err);
-        } else {
-            console.log(resp);
-       
-
-    let klabea = user.password;
-
-    bcrypt.hash(klabea, saltos,(err, klabea) => {
-        user.password = klabea;
-    });
-    
-   
-    const sql2 = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}' AND password = '${user.password}'`;
-    
-    
-    conexion.query(sql2, (error, resul) => {
+    conexion.query(sql, (error, resul) => {
         if (error) throw error;
         if (resul.length > 0) {
-            response.send('Usuario ya registrado!');
-        } else {
-            const sql = 'INSERT INTO usuarios SET ?';
-
-            conexion.query(sql, user, error => {
-                if (error) throw error;
-                response.send("Usuario añadido!");
-            });
+            klabea = resul.password;
         }
     });
 
-}
-});
+    bcrypt.compare(user.password, klabea, (err, resp) => {
+        if (err) {
+            console.log("Error:", err);
+        } else {       
 
+            if (!resp) {
+                let klabea = user.password;
+
+                bcrypt.hash(klabea, saltos,(err, klabea) => {
+                    user.password = klabea;
+                });
+                            
+                const sql = 'INSERT INTO usuarios SET ?';
+
+                conexion.query(sql, user, error => {
+                    if (error) throw error;
+                    response.send("Usuario añadido!");
+                });
+                
+            } else {
+                response.send('Usuario ya registrado!');
+            }
+        }
+    });
 });
 
 // Login usuario
