@@ -2,11 +2,9 @@
 const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
-const PORT = process.env.PORT || 3301;
+const PORT = process.env.PORT || 3309;
 const app = express();
-const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
-const saltos = 10; // Rondas bcryptjs
 
 app.use(bodyParser.json());
 
@@ -18,20 +16,20 @@ app.use(function(req, res, next) {
   });
 
 // CONEXION HEROKU
-const conexion = mysql.createPool({
-    host: 'us-cdbr-east-05.cleardb.net',
-    user: 'b77f4ba431fed6',
-    password: '73e16742',
-    database: 'heroku_980031004d924ce'
-});
+// const conexion = mysql.createPool({
+//     host: 'us-cdbr-east-05.cleardb.net',
+//     user: 'b77f4ba431fed6',
+//     password: '73e16742',
+//     database: 'heroku_980031004d924ce'
+// });
 
 // CONEXION LOCAL
-// const conexion = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '',
-//     database: 'app-martxas'
-// });
+const conexion = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'mendimartxas'
+});
 
 // conexion.connect();
 
@@ -41,69 +39,64 @@ app.get('/', (request, response) => {
 });
 
 // // Registro usuario
-app.post('/registro-usuario',(request, response) => {
+app.post('/registro-usuario',async (request, response) => {
 
     const user = {
         nombre : request.body.nombre,
         password : request.body.password
     }
 
-    let sql = `SELECT password FROM usuarios WHERE nombre = '${user.nombre}'`;
-    let klabea = '';
+    let passw = await bcrypt.hash(user.password,8);
+    
+    if (user.nombre && user.password) {
+        const sql2 = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}'`;
+                 
+        conexion.query(sql2, async (error, results) => {
+            if (error) throw error;
+            console.log(results.length)
 
-    conexion.query(sql, (error, resul) => {
-        if (error) throw error;
-        if (resul.length > 0) {
-            klabea = resul.password;
-        }
-    });
+            // Si no existe el nombre, se inserta el usuario en la BBDD
+            if (results.length == 0) {
 
-    bcrypt.compare(user.password, klabea, (err, resp) => {
-        if (err) {
-            console.log("Error:", err);
-        } else {       
+                user.password = passw;
 
-            if (resp == false) {
-                let klabea = user.password;
-
-                bcrypt.hash(klabea, saltos,(err, klabea) => {
-                    user.password = klabea;
-                });
-                            
                 const sql = 'INSERT INTO usuarios SET ?';
 
-                conexion.query(sql, user, error => {
+                conexion.query(sql, user, (error) => {
                     if (error) throw error;
-                    response.send("Usuario añadido!");
+                    response.send("Usuario registrado con éxito!");
                 });
-                
-            } else {
-                response.send('Usuario ya registrado!');
-            }
-        }
-    });
+            
+            // await bcrypt.compare(user.password, results[0].password
+
+            } else { response.send("El nombre está en uso!"); }             
+             
+        });
+    }
 });
 
-// Login usuario
-    app.post('/login-usuario',(request, response) => {
 
-        const hash = crypto.createHash('sha256',request.body.password).digest('hex');
+// Login usuario
+    app.post('/login-usuario', (request, response) => {
 
         const user = {
             nombre : request.body.nombre,
-            password : hash
+            password : request.body.password
         }
 
-        const sql = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}' AND password = '${user.password}'`;
+        if (user.nombre && user.password) {
 
-        conexion.query(sql, (error, resul) => {
-            if (error) throw error;
-            if (resul.length > 0) {
-                response.send('Usuario logueado con éxito!');
-            } else {
-                response.send('Regístrese!');
-            }
-        });
+            const sql = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}'`;
+
+            conexion.query(sql, async (error, resul) => {
+                if (error) throw error;
+                if(resul.length == 0 || !(await bcrypt.compare(user.password,resul[0].password))){
+                    response.send("Usuario o password incorrectos");
+                } else {
+                    response.send("Login correcto!");
+                }
+            });
+        }
     });
 
 // all mendimartxas
