@@ -97,9 +97,9 @@ app.post('/registro-usuario', async (request, response) => {
             conexion.query(sql, async (error, resul) => {
                 if (error) throw error;
                 if(resul.length == 0 || !(await bcrypt.compare(user.password,resul[0].password))){
-                    response.send("Usuario o password incorrectos");
+                    return true;
                 } else {
-                    response.send("Login correcto!");
+                    return false;
                 }
             });
         }
