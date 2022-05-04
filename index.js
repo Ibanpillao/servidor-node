@@ -41,7 +41,7 @@ app.get('/', (request, response) => {
 });
 
 // // Registro usuario
-app.post('/registro-usuario',async (request, response) => {
+app.post('/registro-usuario', async (request, response) => {
 
     const user = {
         nombre : request.body.nombre,
@@ -49,12 +49,10 @@ app.post('/registro-usuario',async (request, response) => {
     }
 
     let usuario = user.nombre;
-    let klabea = '';
-    const salto = bcrypt.genSalt(8);
-    bcrypt.hash(usuario.password,salto)
-    .then(newKlabea => klabea = newKlabea)
-    .catch(error => error);
+    let clave = user.password;
 
+    // let salto = bcrypt.genSalt(8);
+    let passw = await bcrypt.hash(clave, 8);
     
     if (user.nombre && user.password) {
         const sql2 = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}'`;
@@ -66,7 +64,7 @@ app.post('/registro-usuario',async (request, response) => {
             // Si no existe el nombre, se inserta el usuario en la BBDD
             if (results.length == 0) {
 
-                user.password = klabea;
+                user.password = passw;
 
                 const sql = 'INSERT INTO usuarios SET ?';
 
