@@ -2,11 +2,13 @@
 const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const PORT = process.env.PORT || 3309;
 const app = express();
 const bcrypt = require("bcryptjs");
 
 app.use(bodyParser.json());
+app.use(cors());
 
 app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
