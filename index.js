@@ -66,7 +66,7 @@ app.post('/registro-usuario',async (request, response) => {
             // Si no existe el nombre, se inserta el usuario en la BBDD
             if (results.length == 0) {
 
-                user.password = passw;
+                user.password = klabea;
 
                 const sql = 'INSERT INTO usuarios SET ?';
 
