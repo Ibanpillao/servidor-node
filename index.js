@@ -49,8 +49,12 @@ app.post('/registro-usuario',async (request, response) => {
     }
 
     let usuario = user.nombre;
+    let klabea = '';
+    const salto = bcrypt.genSalt(8);
+    bcrypt.hash(usuario.password,salto)
+    .then(newKlabea => klabea = newKlabea)
+    .catch(error => error);
 
-    let passw = await bcrypt.hash(usuario.password,8);
     
     if (user.nombre && user.password) {
         const sql2 = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}'`;
