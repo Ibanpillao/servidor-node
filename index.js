@@ -41,41 +41,41 @@ app.get('/', (request, response) => {
 });
 
 // // Registro usuario
-app.post('/registro-usuario', async (request, response) => {
+app.post('/registro-usuario', (request, response) => {
 
     const user = {
         nombre : request.body.nombre,
         password : request.body.password
     }
 
-    let usuario = user.nombre;
+    // let usuario = user.nombre;
     let clave = user.password;
 
     // let salto = bcrypt.genSalt(8);
-    let passw = await bcrypt.hash(clave, 8);
+    bcrypt.hash(clave, 8, (error, resp) => {
+        user.password = resp;
+    });
     
     if (user.nombre && user.password) {
         const sql2 = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}'`;
                  
         conexion.query(sql2, async (error, results) => {
             if (error) throw error;
-            console.log(results.length)
 
             // Si no existe el nombre, se inserta el usuario en la BBDD
             if (results.length == 0) {
 
-                user.password = passw;
-
                 const sql = 'INSERT INTO usuarios SET ?';
 
-                conexion.query(sql, user, (error) => {
-                    if (error) throw error;
-                    response.send("Usuario registrado con éxito!");
-                });
-            
-            // await bcrypt.compare(user.password, results[0].password
-
-            } else { response.send("El nombre está en uso!"); }             
+                conexion.query(sql, user, (error,resul) => {
+                    if (error) throw error;             
+                    if (resul) {
+                        response.json({success: true, message: 'Registro correcto!'});
+                    } else {
+                        response.json({success: false, message: 'Registro incorrecto!'});
+                    }
+                });    
+            }            
              
         });
     }
@@ -94,13 +94,18 @@ app.post('/registro-usuario', async (request, response) => {
 
             const sql = `SELECT * FROM usuarios WHERE nombre = '${user.nombre}'`;
 
-            conexion.query(sql, async (error, resul) => {
+            conexion.query(sql, (error, resul) => {
                 if (error) throw error;
-                if(resul.length == 0 || !(await bcrypt.compare(user.password,resul[0].password))){
-                    return true;
-                } else {
-                    return false;
-                }
+                if(resul.length > 0) {
+                    bcrypt.compare( user.password, resul[0].password, (error, resultado) => {
+                        if (resultado) {
+                            response.json({success: true, message: 'Login correcto!'});
+                            // response.send('Login correcto');
+                        } else {
+                            response.json({success: false, message: 'Login incorrecto!'});
+                        }
+                    })
+                } 
             });
         }
     });
@@ -155,6 +160,7 @@ app.post('/addMendiMartxa',(request, response) => {
 app.put('/update/:id',(request, response) => {
     const {id} = request.params;
     const {nombre, ciudad, distancia, fecha, participantes} = request.body;
+    if (request.body.participantes == 0) request.body.participantes = null;
     const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}',nombre = '${nombre}',participantes = '${participantes}' WHERE idmartxas = ${id}`;
     
     conexion.query(sql, error => {
@@ -168,9 +174,13 @@ app.delete('/borrar/:id',(request, response) => {
     const {id} = request.params;
     const sql = `DELETE FROM martxas WHERE idmartxas = ${id}`;
 
-    conexion.query(sql, error => {
+    conexion.query(sql, (error,resul) => {
         if (error) throw error;
-        response.send(`Mendimartxa ${id} borrada!`);
+        if (resul) {
+            response.json({success: true, message: `Marcha con id ${id} eliminada`});
+        } else {
+            response.json({success: false, message: `No se pudo eliminar la martxa`});
+        }
     });
 });
 
