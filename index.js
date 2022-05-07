@@ -165,8 +165,7 @@ app.put('/update/:id',(request, response) => {
     conexion.query(sql, (error,resul) => {
         if (error) throw error;
         if (resul) {
-            let martxa = JSON.parse(result);
-            response.json({success: true, message: `Martxa actualizada: ${martxa}`});
+            response.json({success: true, message: `Martxa actualizada: ${result.id}`});
         }
 
     });
