@@ -160,7 +160,7 @@ app.post('/addMendiMartxa',(request, response) => {
 app.put('/update/:id',(request, response) => {
     const {id} = request.params;
     const {nombre, ciudad, distancia, fecha, participantes} = request.body;
-    if (request.body.participantes == 0) request.body.participantes = null;
+    if (participantes == 0) participantes = null;
     const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}',nombre = '${nombre}',participantes = '${participantes}' WHERE idmartxas = ${id}`;
     
     conexion.query(sql, error => {
