@@ -162,9 +162,12 @@ app.put('/update/:id',(request, response) => {
     const {nombre, ciudad, distancia, fecha, participantes} = request.body;
     const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}',nombre = '${nombre}',participantes = '${participantes}' WHERE idmartxas = ${id}`;
     
-    conexion.query(sql, error => {
+    conexion.query(sql, (error,resul) => {
         if (error) throw error;
-        response.send(`Mendimartxa ${id} actualizada!`);
+        if (resul) {
+            response.json({success: true, message: `Martxa actualizada: ${resul}`});
+        }
+
     });
 });
 
