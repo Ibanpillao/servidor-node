@@ -1,5 +1,6 @@
 
 const express = require('express');
+const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const PORT = process.env.PORT || 3309;
@@ -16,7 +17,23 @@ app.use(function(req, res, next) {
     next();
   });
 
+// CONEXION HEROKU
+const conexion = mysql.createPool({
+    host: 'us-cdbr-east-05.cleardb.net',
+    user: 'b77f4ba431fed6',
+    password: '73e16742',
+    database: 'heroku_980031004d924ce'
+});
 
+// CONEXION LOCAL
+// const conexion = mysql.createConnection({
+//     host: 'localhost',
+//     user: 'root',
+//     password: '',
+//     database: 'mendimartxas'
+// });
+
+// conexion.connect();
 
 // API - home
 app.get('/', (request, response) => {
