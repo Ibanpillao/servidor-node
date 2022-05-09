@@ -75,7 +75,9 @@ app.post('/registro-usuario', (request, response) => {
                         response.json({success: false, message: 'Registro incorrecto!'});
                     }
                 });    
-            }            
+            } else {
+                response.json({success: false, message: 'Registro incorrecto!'});
+            }         
              
         });
     }
