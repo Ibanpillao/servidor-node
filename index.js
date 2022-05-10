@@ -61,31 +61,24 @@ app.post('/registro-usuario', (request, response) => {
                  
         conexion.query(sql2, async (error, results) => {
             if (error) throw error;
-            const sql = 'INSERT INTO usuarios SET ?';
 
             // Si no existe el nombre, se inserta el usuario en la BBDD
             if (results.length == 0) {
+
+                const sql = 'INSERT INTO usuarios SET ?';
 
                 conexion.query(sql, user, (error,resul) => {
                     if (error) throw error;             
                     if (resul) {
                         response.json({success: true, message: 'Registro correcto!'});
-                    } 
+                    } else {
+                        response.json({success: false, message: 'Registro incorrecto!'});
+                    }
                 });    
             } else {
-                bcrypt.compare( user.password, results[0].password, (error, resultado) => {
-                    if (!resultado) {
-                        response.json({success: false, message: 'El usuario ya está registrado!'});
-                    } else {
-                        conexion.query(sql, user, (error,resul) => {
-                            if (error) throw error;             
-                            if (resul) {
-                                response.json({success: true, message: 'Registro correcto!'});
-                            } 
-                        }); 
-                    } 
-                });
-            }                    
+                response.json({success: false, message: `El usuario ${user.nombre} está en uso!`});
+            }         
+             
         });
     }
 });
