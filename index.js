@@ -73,7 +73,7 @@ app.post('/registro-usuario', (request, response) => {
                     } 
                 });    
             } else {
-                bcrypt.compare( user.password, resul[0].password, (error, resultado) => {
+                bcrypt.compare( user.password, results[0].password, (error, resultado) => {
                     if (resultado) {
                         response.json({success: false, message: 'El usuario ya está registrado!'});
                     } else {
