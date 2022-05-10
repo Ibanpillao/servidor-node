@@ -1,4 +1,5 @@
 
+// Servidor + API
 const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
@@ -10,6 +11,7 @@ const bcrypt = require("bcryptjs");
 app.use(bodyParser.json());
 app.use(cors());
 
+// Habilitar CORS
 app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods","GET, POST, OPTIONS, PUT, DELETE");
@@ -17,7 +19,7 @@ app.use(function(req, res, next) {
     next();
   });
 
-// CONEXION HEROKU
+// CONEXION BBDD HEROKU
 const conexion = mysql.createPool({
     host: 'us-cdbr-east-05.cleardb.net',
     user: 'b77f4ba431fed6',
@@ -25,7 +27,7 @@ const conexion = mysql.createPool({
     database: 'heroku_980031004d924ce'
 });
 
-// CONEXION LOCAL
+// CONEXION BBDD LOCALHOST
 // const conexion = mysql.createConnection({
 //     host: 'localhost',
 //     user: 'root',
@@ -40,7 +42,7 @@ app.get('/', (request, response) => {
     response.send('Bizkaiko mendimartxak');
 });
 
-// // Registro usuario
+// Registro usuario
 app.post('/registro-usuario', (request, response) => {
 
     const user = {
@@ -48,10 +50,8 @@ app.post('/registro-usuario', (request, response) => {
         password : request.body.password
     }
 
-    // let usuario = user.nombre;
     let clave = user.password;
 
-    // let salto = bcrypt.genSalt(8);
     bcrypt.hash(clave, 8, (error, resp) => {
         user.password = resp;
     });
@@ -103,10 +103,10 @@ app.post('/registro-usuario', (request, response) => {
                         if (resultado) {
                             response.json({success: true, message: 'Login correcto!'});
                             // response.send('Login correcto');
-                        } else {
-                            response.json({success: false, message: 'Login incorrecto!'});
-                        }
+                        } 
                     })
+                } else {
+                    response.json({success: false, message: 'Login incorrecto!'});                  
                 } 
             });
         }
