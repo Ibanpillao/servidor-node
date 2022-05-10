@@ -106,8 +106,16 @@ app.post('/registro-usuario', (request, response) => {
                         } 
                     })
                 } else {
-                    response.json({success: false, message: 'Login incorrecto!'});                  
+                    bcrypt.compare( user.password, resul[0].password, (error, resultado) => {
+                        if (resultado) {
+                            response.json({success: false, message: 'Contraseña incorrecta!'});                  
+                        } 
+                    })
                 } 
+
+                if (resul.length == 0) {
+                    response.json({success: false, message: 'El usuario no existe!'});                  
+                }
             });
         }
     });
