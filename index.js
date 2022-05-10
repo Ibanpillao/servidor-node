@@ -76,7 +76,7 @@ app.post('/registro-usuario', (request, response) => {
                     }
                 });    
             } else {
-                response.json({success: false, message: `El usuario ${user.nombre} está en uso!`});
+                response.json({success: false, message: `El usuario \'${user.nombre}\' está en uso!`});
             }         
              
         });
