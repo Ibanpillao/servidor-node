@@ -220,17 +220,24 @@ app.post('/registro-usuario', (request, response) => {
  *              items:
  *                $ref : '#/components/schemas/Mendimartxa'
  */ 
-app.get('/mendimartxas',(request, response) => {
-    const sql = 'SELECT * FROM martxas ORDER BY fecha';
+app.get('/mendimartxas', verifyToken, (request, response) => {
 
-    conexion.query(sql, (err, resul) => {
-        if (err) throw err;
-        if (resul.length > 0) {
-            response.json(resul);
-        } else {
-            response.send('No hay datos');
+    jwt.verify(request.token, 'secretkey', (error, authData) => {
+        if (error) {
+            response.sendStatus(403);
+        }else {
+            const sql = 'SELECT * FROM martxas ORDER BY fecha';
+
+            conexion.query(sql, (err, resul) => {
+                if (err) throw err;
+                if (resul.length > 0) {
+                    response.json(resul,authData);
+                } else {
+                    response.send('No hay datos');
+                }
+            });
         }
-    });
+    })
 });
 
 // 1 mendimartxa
@@ -400,6 +407,33 @@ app.delete('/borrar/:id',(request, response) => {
         }
     });
 });
+
+app.post("/api/login", (req , res) => {
+    const user = {
+        nombre : "Iban",
+        email: "isola@birt.eus"
+    }
+
+    jwt.sign({user}, 'secretkey', {expiresIn: '32s'}, (err, token) => {
+        res.json({
+            token
+        });
+    });
+
+});
+
+// Authorization: Bearer <token>
+function verifyToken(req, res, next){
+    const bearerHeader =  req.headers['authorization'];
+
+    if(typeof bearerHeader !== 'undefined'){
+         const bearerToken = bearerHeader.split(" ")[1];
+         req.token  = bearerToken;
+         next();
+    }else{
+        res.sendStatus(403);
+    }
+}
 
 
 app.listen(PORT, () => {
