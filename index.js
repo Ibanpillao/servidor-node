@@ -7,6 +7,82 @@ const cors = require('cors');
 const PORT = process.env.PORT || 3309;
 const app = express();
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+var config = require('./config');
+
+// Swagger
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUI = require('swagger-ui-express');
+const objSwagger = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "Node MySQL API",
+            description: "API que trabaja con mendimartxas de EuskalHerria",
+            version: "1.0.0",
+            contact: {
+                name: "Iván Sola",
+                email: "ibanpillao@gmail.com"
+            }
+        },
+        servers: [
+            {
+                url : "https://mendimartxas.herokuapp.com/",
+                description: "Heroku server"
+            }
+        ],     
+    },
+    apis: ['index.js'],
+}
+
+app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(swaggerJsdoc(objSwagger)));
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes: 
+ *     basicAuth: 
+ *        type: http
+ *        scheme: basic
+ *   schemas:
+ *     Mendimartxa:
+ *       description: Listado de mendimartxas de Euskalherria
+ *       type: object
+ *       properties:
+ *         nombre :
+ *           type : string
+ *           description : Nombre de martxa
+ *         ciudad : 
+ *           type : string
+ *           description : Ciudad donde se celebra la martxa
+ *         distancia :
+ *           type : number
+ *           description : Distancia de martxa en km
+ *         fecha :
+ *           type : string
+ *           description : Fecha en la que se celebra la martxa
+ *         participantes :
+ *           type: number
+ *           description : Número de participantes
+ *       required:
+ *          - nombre
+ *          - ciudad
+ *          - distancia
+ *          - fecha
+ *       example:
+ *          nombre : Bilboko mendi martxa
+ *          ciudad : Bilbao
+ *          distancia: 24.5
+ *          fecha: 2022/02/23
+ *          participantes: 350
+ * security:
+ *   - basicAuth: []
+ * tags: 
+ *  - name : Mendimartxa
+ *    description: Listado y fechas de mendimartxas en Euskal Herria 
+ *  - name : Inicio
+ *    description : Ongi etorri, mendizaleok! 
+ */
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -38,8 +114,20 @@ const conexion = mysql.createPool({
 // conexion.connect();
 
 // API - home
+
+/**
+ * @swagger
+ * /:
+ *  get:
+ *    summary: mensaje inicial de API
+ *    tags : 
+ *     - Inicio
+ *    responses:
+ *      200:
+ *        description: Respuesta exitosa!
+ */
 app.get('/', (request, response) => {
-    response.send('Bizkaiko mendimartxak');
+    response.send('<h1>Bizkaiko mendimartxak</h1>');
 });
 
 // Registro usuario
@@ -113,6 +201,25 @@ app.post('/registro-usuario', (request, response) => {
     });
 
 // all mendimartxas
+/**
+ * @swagger
+ * /mendimartxas:
+ *  get:
+ *    security:
+ *     - basicAuth: []
+ *    summary: Lista todas las martxas de la BBDD
+ *    tags : 
+ *     - Mendimartxa
+ *    responses:
+ *      200:
+ *        description: Lista completa de mendimartxas
+ *        content: 
+ *          application/json:
+ *            schema: 
+ *              type: array
+ *              items:
+ *                $ref : '#/components/schemas/Mendimartxa'
+ */ 
 app.get('/mendimartxas',(request, response) => {
     const sql = 'SELECT * FROM martxas ORDER BY fecha';
 
@@ -127,6 +234,34 @@ app.get('/mendimartxas',(request, response) => {
 });
 
 // 1 mendimartxa
+/**
+ * @swagger
+ * /mendimartxas/{id}:
+ *  get:
+ *    security:
+ *     - basicAuth: []
+ *    summary: Lista una mendimartxa determinada
+ *    tags : 
+ *     - Mendimartxa
+ *    parameters:
+ *      - in: path
+ *        name : id
+ *        schema:
+ *          type: string
+ *        required : true
+ *        description: Id de mendimartxa
+ *    responses:
+ *      200:
+ *        description: Respuesta ok!
+ *        content: 
+ *          application/json:
+ *            schema: 
+ *              type: array
+ *              items:
+ *                $ref : '#components/schemas/Mendimartxa'
+ *      404:
+ *        description: La mendimartxa no existe
+ */ 
 app.get('/mendimartxas/:id',(request, response) => {
     const {id} = request.params;
     const sql = `SELECT * FROM martxas WHERE idmartxas = ${id}`;
@@ -142,6 +277,32 @@ app.get('/mendimartxas/:id',(request, response) => {
 });
 
 // Add mendimartxa
+/**
+ * @swagger
+ * /addMendiMartxa:
+ *  post:
+ *    security:
+ *     - basicAuth: []
+ *    summary: Añade 1 mendimartxa a la BBDD
+ *    tags : 
+ *      - Mendimartxa
+ *    requestBody:
+ *      required : true
+ *      content: 
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            $ref: '#/components/schemas/Mendimartxa'
+ *    responses:
+ *      200:
+ *        description: Martxa añadida correctamente
+ *        content: 
+ *          application/json:
+ *            schema: 
+ *              type: array
+ *              items:
+ *                $ref : '#components/schemas/Mendimartxa'
+ */ 
 app.post('/addMendiMartxa',(request, response) => {
     const sql = "INSERT INTO martxas SET ?";
 
@@ -159,6 +320,35 @@ app.post('/addMendiMartxa',(request, response) => {
 });
 
 // Actualizar
+/**
+ * @swagger
+ * /update/{id}:
+ *  put:
+ *    security:
+ *     - basicAuth: []
+ *    summary: Actualiza una mendimartxa
+ *    tags : 
+ *      - Mendimartxa
+ *    requestBody:
+ *      required : true
+ *      content: 
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            $ref: '#/components/schemas/Mendimartxa'
+ *    parameters:
+ *      - in: path
+ *        name : id
+ *        schema:
+ *          type: string
+ *        required : true
+ *        description: Id de mendimartxa
+ *    responses:
+ *      200:
+ *        description: Martxa actualizada
+ *      404:
+ *        description: La mendimartxa no existe
+ */ 
 app.put('/update/:id',(request, response) => {
     const {id} = request.params;
     const {nombre, ciudad, distancia, fecha, participantes} = request.body;
@@ -175,6 +365,28 @@ app.put('/update/:id',(request, response) => {
 
 
 // Borrar
+/**
+ * @swagger
+ * /borrar/{id}:
+ *  delete:
+ *    security:
+ *     - basicAuth: []
+ *    summary: Lista una mendimartxa determinada
+ *    tags : 
+ *      - Mendimartxa
+ *    parameters:
+ *      - in: path
+ *        name : id
+ *        schema:
+ *          type: string
+ *        required : true
+ *        description: Id de mendimartxa
+ *    responses:
+ *      200:
+ *        description: Mendimartxa borrada correctamente
+ *      404:
+ *        description: La mendimartxa no existe
+ */ 
 app.delete('/borrar/:id',(request, response) => {
     const {id} = request.params;
     const sql = `DELETE FROM martxas WHERE idmartxas = ${id}`;
