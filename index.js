@@ -41,6 +41,7 @@ const objSwagger = {
         ],     
     },
     apis: ['index.js'],
+    security: [ { bearerAuth: [] } ]
 }
 
 app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(swaggerJsdoc(objSwagger)));
