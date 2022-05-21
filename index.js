@@ -8,7 +8,41 @@ const PORT = process.env.PORT || 3309;
 const app = express();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-var config = require('./config');
+const secret = require('./settings/keys');
+app.set('key', secret.key);
+
+// Validar token de users
+const verificacion = express.Router();
+
+verificacion.use((req, res, next)=>{
+    let token = req.headers['x-access-token'] || req.headers['authorization'];
+    
+    if (!token) {
+        res.status(401).send({
+            error: "Es necesario un token de autentificación"
+        });
+        return;
+    }
+
+    if (token.startsWith('Bearer ')) {
+        token = token.slice(7, token.length);
+        console.log(token);
+    }
+
+    if (token) {
+        jwt.verify(token, app.get('key'), (err, decoded) => {
+            if (err) {
+                return res.json({
+                    message: "El token no es válido"
+                })
+            } else {
+                req.decoded = decoded;
+                next();
+            }
+        })
+    }
+
+});
 
 // Swagger
 const swaggerJsdoc = require('swagger-jsdoc');
@@ -25,74 +59,69 @@ const objSwagger = {
                 email: "ibanpillao@gmail.com"
             }
         },
-        securitySchemes: {
-            bearerAuth: {
-                type: 'apiKey',
-                name: 'Authorization',
-                scheme: 'bearer',
-                in: 'header',
-            }
+        tags: {
+                name: "Mendimartxa",
+                description: "Listado y fechas de mendimartxas en Euskal Herria",
+                name: "Inicio",
+                description: "Ongi etorri, mendizaleok!"
         },
         servers: [
             {
                 url : "https://mendimartxas.herokuapp.com/",
                 description: "Heroku server"
             }
-        ],     
+        ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'apiKey',
+                    name: 'Authorization',
+                    scheme: 'bearer',
+                    in: 'header',
+                }
+            },
+            schemas: {
+                "Mendimartxa" : {
+                    type: "object",
+                    properties: {
+                        nombre : {
+                            type : "string",
+                            description : "Nombre de martxa"
+                        },
+                        ciudad : {
+                            type : "string",
+                            description : "Ciudad donde se celebra la martxa"
+                        },
+                        distancia : {
+                            type : "number",
+                            description : "Distancia de martxa en km"
+                        },
+                        fecha : {
+                            type : "string",
+                            description : "Fecha en la que se celebra la martxa"
+                        },
+                        participantes : {
+                            type: "number",
+                            description : "Número de participantes"
+                        }
+                    },
+                   required: ["nombre","ciudad","distancia","fecha"],
+                   example: {
+                      nombre : "Bilboko mendi martxa",
+                      ciudad : "Bilbao",
+                      distancia: "24.5",
+                      fecha: "2022/02/23",
+                      participantes: 350
+                   }
+                }
+            }
+        }     
     },
     apis: ['index.js'],
     security: [ { bearerAuth: [] } ]
 }
 
 app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(swaggerJsdoc(objSwagger)));
-
-/**
- * @swagger
- * components:
- *   securitySchemes: 
- *     basicAuth: 
- *        type: http
- *        scheme: basic
- *   schemas:
- *     Mendimartxa:
- *       description: Listado de mendimartxas de Euskalherria
- *       type: object
- *       properties:
- *         nombre :
- *           type : string
- *           description : Nombre de martxa
- *         ciudad : 
- *           type : string
- *           description : Ciudad donde se celebra la martxa
- *         distancia :
- *           type : number
- *           description : Distancia de martxa en km
- *         fecha :
- *           type : string
- *           description : Fecha en la que se celebra la martxa
- *         participantes :
- *           type: number
- *           description : Número de participantes
- *       required:
- *          - nombre
- *          - ciudad
- *          - distancia
- *          - fecha
- *       example:
- *          nombre : Bilboko mendi martxa
- *          ciudad : Bilbao
- *          distancia: 24.5
- *          fecha: 2022/02/23
- *          participantes: 350
- * security:
- *   - basicAuth: []
- * tags: 
- *  - name : Mendimartxa
- *    description: Listado y fechas de mendimartxas en Euskal Herria 
- *  - name : Inicio
- *    description : Ongi etorri, mendizaleok! 
- */
-
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -198,7 +227,17 @@ app.post('/registro-usuario', (request, response) => {
                 if(resul.length > 0) {
                     bcrypt.compare( user.password, resul[0].password, (error, resultado) => {
                         if (resultado) {
-                            response.json({success: true, message: 'Login correcto!'});
+
+                            const payLoad = {
+                                check : true
+                            }
+                    
+                            const token = jwt.sign(payLoad, app.get('key'), {
+                                expiresIn : '7d',
+                                
+                            })
+
+                            response.json({success: true, message: 'Login correcto!', token : token});
                             // response.send('Login correcto');
                         } else response.json({success: false, message: 'Contraseña incorrecta!'});
                     })
@@ -214,8 +253,9 @@ app.post('/registro-usuario', (request, response) => {
  * @swagger
  * /mendimartxas:
  *  get:
+ *    description: Selecciona las mendimartxas y utra-trails de <b>Euskal Herria</b>
  *    security:
- *     - BearerAuth: []
+ *     - bearerAuth: []
  *    summary: Lista todas las martxas de la BBDD
  *    tags : 
  *     - Mendimartxa
@@ -313,7 +353,7 @@ app.get('/mendimartxas/:id',(request, response) => {
  *              items:
  *                $ref : '#components/schemas/Mendimartxa'
  */ 
-app.post('/addMendiMartxa',(request, response) => {
+app.post('/addMendiMartxa',verificacion, (request, response) => {
     const sql = "INSERT INTO martxas SET ?";
 
     const martxaObj = {
@@ -359,7 +399,7 @@ app.post('/addMendiMartxa',(request, response) => {
  *      404:
  *        description: La mendimartxa no existe
  */ 
-app.put('/update/:id',(request, response) => {
+app.put('/update/:id',verificacion, (request, response) => {
     const {id} = request.params;
     const {nombre, ciudad, distancia, fecha, participantes} = request.body;
     const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}',nombre = '${nombre}',participantes = '${participantes}' WHERE idmartxas = ${id}`;
@@ -397,7 +437,7 @@ app.put('/update/:id',(request, response) => {
  *      404:
  *        description: La mendimartxa no existe
  */ 
-app.delete('/borrar/:id',(request, response) => {
+app.delete('/borrar/:id',verificacion, (request, response) => {
     const {id} = request.params;
     const sql = `DELETE FROM martxas WHERE idmartxas = ${id}`;
 
@@ -410,6 +450,8 @@ app.delete('/borrar/:id',(request, response) => {
         }
     });
 });
+
+
 
 
 app.listen(PORT, () => {
