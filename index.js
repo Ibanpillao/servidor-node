@@ -410,6 +410,7 @@ app.delete('/borrar/:id',(request, response) => {
 
 app.post("/api/login", (req , res) => {
     const user = {
+        id: 1,
         nombre : "Iban",
         email: "isola@birt.eus"
     }
