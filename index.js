@@ -25,11 +25,13 @@ const objSwagger = {
                 email: "ibanpillao@gmail.com"
             }
         },
-        bearer: {
-            description: "For accessing the API a valid JWT token must be passed in all the queries in the 'Authorization' header.",
-            type: "apikey",
-            name: "Authorization",
-            in: "header"
+        securitySchemes: {
+            bearerAuth: {
+                type: 'apiKey',
+                name: 'Authorization',
+                scheme: 'bearer',
+                in: 'header',
+            }
         },
         servers: [
             {
@@ -212,7 +214,7 @@ app.post('/registro-usuario', (request, response) => {
  * /mendimartxas:
  *  get:
  *    security:
- *     - bearer: []
+ *     - BearerAuth: []
  *    summary: Lista todas las martxas de la BBDD
  *    tags : 
  *     - Mendimartxa
@@ -406,21 +408,6 @@ app.delete('/borrar/:id',(request, response) => {
             response.json({success: false, message: `No se pudo eliminar la martxa`});
         }
     });
-});
-
-app.post("/api/login", (req , res) => {
-    const user = {
-        id: 1,
-        nombre : "Iban",
-        email: "isola@birt.eus"
-    }
-
-    jwt.sign({user}, 'secretkey', {expiresIn: '32s'}, (err, token) => {
-        res.json({
-            token
-        });
-    });
-
 });
 
 
