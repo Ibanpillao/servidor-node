@@ -25,6 +25,12 @@ const objSwagger = {
                 email: "ibanpillao@gmail.com"
             }
         },
+        bearer: {
+            description: "For accessing the API a valid JWT token must be passed in all the queries in the 'Authorization' header.",
+            type: "apikey",
+            name: "Authorization",
+            in: "header"
+        },
         servers: [
             {
                 url : "https://mendimartxas.herokuapp.com/",
@@ -206,7 +212,7 @@ app.post('/registro-usuario', (request, response) => {
  * /mendimartxas:
  *  get:
  *    security:
- *     - basicAuth: []
+ *     - bearer: []
  *    summary: Lista todas las martxas de la BBDD
  *    tags : 
  *     - Mendimartxa
