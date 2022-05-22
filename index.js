@@ -143,22 +143,22 @@ app.use(function(req, res, next) {
   });
 
 // CONEXION BBDD HEROKU
-const conexion = mysql.createPool({
-    host: 'us-cdbr-east-05.cleardb.net',
-    user: 'b77f4ba431fed6',
-    password: '73e16742',
-    database: 'heroku_980031004d924ce'
-});
-
-// CONEXION BBDD LOCALHOST
-// const conexion = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '',
-//     database: 'mendimartxas'
+// const conexion = mysql.createPool({
+//     host: 'us-cdbr-east-05.cleardb.net',
+//     user: 'b77f4ba431fed6',
+//     password: '73e16742',
+//     database: 'heroku_980031004d924ce'
 // });
 
-// conexion.connect();
+// CONEXION BBDD LOCALHOST
+const conexion = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'mendimartxas'
+});
+
+conexion.connect();
 
 // API - home
 
@@ -225,8 +225,6 @@ app.post('/registro-usuario', (request, response) => {
  * /login-usuario:
  *  post:
  *    description: Login de usuario de App
- *    security:
- *     - bearerAuth: []
  *    tags : 
  *     - Usuarios
  *    requestBody:
@@ -289,8 +287,6 @@ app.post('/registro-usuario', (request, response) => {
  * /mendimartxas:
  *  get:
  *    description: Selecciona las mendimartxas y utra-trails de <b>Euskal Herria</b>
- *    security:
- *     - bearerAuth: []
  *    summary: Lista todas las martxas de la BBDD
  *    tags : 
  *     - Mendimartxa
@@ -323,7 +319,7 @@ app.get('/mendimartxas', (request, response) => {
  * /mendimartxas/{id}:
  *  get:
  *    security:
- *     - basicAuth: []
+ *     - bearerAuth: []
  *    summary: Lista una mendimartxa determinada
  *    tags : 
  *     - Mendimartxa
@@ -366,7 +362,7 @@ app.get('/mendimartxas/:id',(request, response) => {
  * /addMendiMartxa:
  *  post:
  *    security:
- *     - basicAuth: []
+ *     - bearerAuth: []
  *    summary: Añade 1 mendimartxa a la BBDD
  *    tags : 
  *      - Mendimartxa
@@ -409,7 +405,7 @@ app.post('/addMendiMartxa',verificacion, (request, response) => {
  * /update/{id}:
  *  put:
  *    security:
- *     - basicAuth: []
+ *     - bearerAuth: []
  *    summary: Actualiza una mendimartxa
  *    tags : 
  *      - Mendimartxa
@@ -454,7 +450,7 @@ app.put('/update/:id',verificacion, (request, response) => {
  * /borrar/{id}:
  *  delete:
  *    security:
- *     - basicAuth: []
+ *     - bearerAuth: []
  *    summary: Lista una mendimartxa determinada
  *    tags : 
  *      - Mendimartxa
