@@ -21,7 +21,7 @@ const conexion = mysql.createPool({
 //     database: 'mendimartxas'
 // });
 
-conexion.connect();
+// conexion.connect();
 
 
 module.exports = conexion;
