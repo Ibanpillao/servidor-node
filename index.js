@@ -59,12 +59,20 @@ const objSwagger = {
                 email: "ibanpillao@gmail.com"
             }
         },
-        tags: {
+        tags: [
+            {
                 name: "Mendimartxa",
-                description: "Listado y fechas de mendimartxas en Euskal Herria",
+                description: "Listado y fechas de mendimartxas en <b>Euskal Herria</b>",
+            },
+            {
+                name: "Usuarios",
+                description: "Usuarios de App"
+            },
+            {
                 name: "Inicio",
-                description: "Ongi etorri, mendizaleok!"
-        },
+                description: "<b>Ongi etorri, mendizaleok!</b>"
+            }
+        ],
         servers: [
             {
                 url : "https://mendimartxas.herokuapp.com/",
@@ -81,38 +89,39 @@ const objSwagger = {
                 }
             },
             schemas: {
-                "Mendimartxa" : {
+                Mendimartxa : {
                     type: "object",
                     properties: {
-                        nombre : {
-                            type : "string",
-                            description : "Nombre de martxa"
+                        nombre: { type: "string" },
+                        ciudad: { type: "string" },
+                        distancia: { type: "float" },
+                        fecha: { type: "string" },
+                        participantes : { type: "number"}
+                    },
+                    required: ["nombre", "ciudad", "distancia", "fecha"],
+                    example: {
+                        nombre : "Gernikako mendi jaia",
+                        ciudad : "Gernika",
+                        distancia: 24.5,
+                        fecha: "2022-05-09",
+                        participantes: 350
+                      }
+                },
+                Usuario: {
+                    type: "object",
+                    properties: {
+                        nombre: {
+                            type: "string",
                         },
-                        ciudad : {
-                            type : "string",
-                            description : "Ciudad donde se celebra la martxa"
-                        },
-                        distancia : {
-                            type : "number",
-                            description : "Distancia de martxa en km"
-                        },
-                        fecha : {
-                            type : "string",
-                            description : "Fecha en la que se celebra la martxa"
-                        },
-                        participantes : {
-                            type: "number",
-                            description : "Número de participantes"
+                        password: {
+                            type: "string"
                         }
                     },
-                   required: ["nombre","ciudad","distancia","fecha"],
-                   example: {
-                      nombre : "Bilboko mendi martxa",
-                      ciudad : "Bilbao",
-                      distancia: "24.5",
-                      fecha: "2022/02/23",
-                      participantes: 350
-                   }
+                    example: {
+                      nombre : "iban",
+                      password : "1234abcd",
+                    },
+                    required: ["nombre", "password"]
                 }
             }
         }     
@@ -211,6 +220,32 @@ app.post('/registro-usuario', (request, response) => {
 
 
 // Login usuario
+/**
+ * @swagger
+ * /login-usuario:
+ *  post:
+ *    description: Login de usuario de App
+ *    security:
+ *     - bearerAuth: []
+ *    tags : 
+ *     - Usuarios
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *              type: object
+ *              $ref: '#/components/schemas/Usuario'
+ *    responses:
+ *      200:
+ *        description: Login correcto
+ *        content: 
+ *          application/json:
+ *            schema: 
+ *              type: array
+ *              items:
+ *                $ref : '#/components/schemas/Usuario'
+ */
     app.post('/login-usuario', (request, response) => {
 
         const user = {
@@ -261,13 +296,12 @@ app.post('/registro-usuario', (request, response) => {
  *     - Mendimartxa
  *    responses:
  *      200:
- *        description: Lista completa de mendimartxas
+ *        description: Respuesta exitosa
  *        content: 
  *          application/json:
  *            schema: 
  *              type: array
- *              items:
- *                $ref : '#/components/schemas/Mendimartxa'
+ *              $ref : '#/components/schemas/Mendimartxa'
  */ 
 app.get('/mendimartxas', (request, response) => {
 
