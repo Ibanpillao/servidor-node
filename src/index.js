@@ -95,7 +95,7 @@ app.get('/', (request, response) => {
                             check : true
                         }
                 
-                        const token = jwt.sign(payLoad, router.get('key'), {
+                        const token = jwt.sign(payLoad, app.get('key'), {
                             expiresIn : '7d',
                             
                         })
