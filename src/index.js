@@ -4,7 +4,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const secret = require('./settings/keys');
-
 const cors = require('cors');
 
 app.use(cors());

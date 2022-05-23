@@ -4,6 +4,15 @@ const conexion = require('../databases/config');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// Habilitar CORS
+router.use(function(req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods","GET, POST, OPTIONS, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers","Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
+
 // Registro usuario
 router.post('/registro-usuario', (request, response) => {
 
