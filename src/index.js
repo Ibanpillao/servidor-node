@@ -5,6 +5,10 @@ const bodyParser = require('body-parser');
 const app = express();
 const secret = require('./settings/keys');
 const cors = require('cors');
+const conexion = require('./databases/config');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
 
 app.use(cors());
 
