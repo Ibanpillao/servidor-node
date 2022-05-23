@@ -5,6 +5,18 @@ const bodyParser = require('body-parser');
 const app = express();
 const secret = require('./settings/keys');
 
+const cors = require('cors');
+
+app.use(cors());
+
+// Habilitar CORS
+app.use(function(req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods","GET, POST, OPTIONS, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers","Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
 app.set('key', secret.key);
 
 // SETTINGS
@@ -18,16 +30,9 @@ app.use(require('./routes/martxa.route'));
 app.use(require('./routes/swagger.route'));
 
 
-// Habilitar CORS
-app.use(function(req, res, next) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods","GET, POST, OPTIONS, PUT, DELETE");
-    res.setHeader("Access-Control-Allow-Headers","Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+
 
 // API - home
-
 /**
  * @swagger
  * /:
@@ -42,11 +47,6 @@ app.use(function(req, res, next) {
 app.get('/', (request, response) => {
     response.send('<h1>Bizkaiko mendimartxak</h1>');
 });
-
-
-
-
-
 
 app.listen(PORT, () => {
     console.log(`Servidor oyendo en el puerto ${PORT}`);

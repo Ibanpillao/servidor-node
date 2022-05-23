@@ -7,6 +7,14 @@ const swaggerUI = require('swagger-ui-express');
 const doc = require('../doc/swagger')
 router.use('/api-doc', swaggerUI.serve, swaggerUI.setup(swaggerJsdoc(doc)));
 
+// Habilitar CORS
+router.use(function(req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods","GET, POST, OPTIONS, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers","Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
 // all mendimartxas
 /**
  * @swagger
