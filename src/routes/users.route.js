@@ -92,7 +92,7 @@ router.post('/registro-usuario', (request, response) => {
                                 check : true
                             }
                     
-                            const token = jwt.sign(payLoad, app.get('key'), {
+                            const token = jwt.sign(payLoad, router.get('key'), {
                                 expiresIn : '7d',
                                 
                             })
