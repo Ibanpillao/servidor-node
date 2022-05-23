@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const conexion = require('../databases/config');
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // Registro usuario
 router.post('/registro-usuario', (request, response) => {
