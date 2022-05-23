@@ -3,9 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const secret = require('./settings/keys');
 const cors = require('cors');
-
 app.use(cors());
 
 // Habilitar CORS
@@ -15,8 +13,6 @@ app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Headers","Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
-
-app.set('key', secret.key);
 
 // SETTINGS
 const PORT = process.env.PORT || 3309;

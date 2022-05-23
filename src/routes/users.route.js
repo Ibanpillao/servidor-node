@@ -3,14 +3,7 @@ const router = express.Router();
 const conexion = require('../databases/config');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
-// Habilitar CORS
-router.use(function(req, res, next) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods","GET, POST, OPTIONS, PUT, DELETE");
-    res.setHeader("Access-Control-Allow-Headers","Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+const secret = require('../settings/keys');
 
 
 // Registro usuario
@@ -101,7 +94,7 @@ router.post('/registro-usuario', (request, response) => {
                                 check : true
                             }
                     
-                            const token = jwt.sign(payLoad, router.get('key'), {
+                            const token = jwt.sign(payLoad, secret.key, {
                                 expiresIn : '7d',
                                 
                             })
