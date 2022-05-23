@@ -28,9 +28,7 @@ app.use(bodyParser.json());
 // RUTAS
 app.use(require('./routes/martxa.route'));
 app.use(require('./routes/swagger.route'));
-
-
-
+app.use(require('./routes/users.route'));
 
 // API - home
 /**
