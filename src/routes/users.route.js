@@ -53,7 +53,7 @@ router.post('/registro-usuario', (request, response) => {
  * @swagger
  * /login-usuario:
  *  post:
- *    description: Login de usuario de App
+ *    summary: Loguearse en app
  *    tags : 
  *     - Usuarios
  *    requestBody:

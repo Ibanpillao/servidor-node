@@ -184,7 +184,7 @@ router.put('/update/:id',verificacion, (request, response) => {
 *  delete:
 *    security:
 *     - bearerAuth: []
-*    summary: Lista una mendimartxa determinada
+*    summary: Borra una mendimartxa determinada
 *    tags : 
 *      - Mendimartxa
 *    parameters:
