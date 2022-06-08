@@ -7,7 +7,7 @@ module.exports.verifica = function(req, res, next) {
         req.token = bearerToken;
         next();
     } else {
-        res.sendStatus(403).send("Es necesario un token de autentificación");
+        res.status(403).send("Es necesario un token de autentificación");
     }
 
 }
