@@ -117,7 +117,7 @@ router.get('/mendimartxas/:id',(request, response) => {
 *              items:
 *                $ref : '#components/schemas/Mendimartxa'
 */ 
-router.post('/addMendiMartxa',verificacion, (request, response) => {
+router.post('/addMendiMartxa',verificacion.verifica, (request, response) => {
     const sql = "INSERT INTO martxas SET ?";
 
     const martxaObj = {
@@ -129,7 +129,10 @@ router.post('/addMendiMartxa',verificacion, (request, response) => {
     }
     conexion.query(sql, martxaObj, (error,result) => {
         if (error) throw error;
-        response.json(result);
+        let fecha = new Date();
+        martxaObj.status = true;
+        martxaObj.entrada = fecha.toISOString();
+        response.json(martxaObj);
         });
 });
 
@@ -163,7 +166,7 @@ router.post('/addMendiMartxa',verificacion, (request, response) => {
 *      404:
 *        description: La mendimartxa no existe
 */ 
-router.put('/update/:id',verificacion, (request, response) => {
+router.put('/update/:id',verificacion.verifica, (request, response) => {
     const {id} = request.params;
     const {nombre, ciudad, distancia, fecha, participantes} = request.body;
     const sql = `UPDATE martxas SET ciudad = '${ciudad}', distancia = '${distancia}', fecha = '${fecha}',nombre = '${nombre}',participantes = '${participantes}' WHERE idmartxas = ${id}`;
@@ -200,7 +203,7 @@ router.put('/update/:id',verificacion, (request, response) => {
 *      404:
 *        description: La mendimartxa no existe
 */ 
-router.delete('/borrar/:id',verificacion, (request, response) => {
+router.delete('/borrar/:id',verificacion.verifica, (request, response) => {
     const {id} = request.params;
     const sql = `DELETE FROM martxas WHERE idmartxas = ${id}`;
 
@@ -213,7 +216,5 @@ router.delete('/borrar/:id',verificacion, (request, response) => {
         }
     });
 });
-
-
 
 module.exports = router;

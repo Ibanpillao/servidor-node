@@ -89,18 +89,9 @@ router.post('/registro-usuario', (request, response) => {
                 if(resul.length > 0) {
                     bcrypt.compare( user.password, resul[0].password, (error, resultado) => {
                         if (resultado) {
-
-                            const payLoad = {
-                                check : true
-                            }
-                    
-                            const token = jwt.sign(payLoad, secret.key, {
-                                expiresIn : '7d',
-                                
-                            })
-
-                            response.json({success: true, message: 'Login correcto!', token : token});
-                            // response.send('Login correcto');
+                           jwt.sign({user : user.password}, secret.key, (err, token) => {
+                             response.json({success: true, message: 'Login correcto!', token : token});
+                           })
                         } else response.json({success: false, message: 'Contraseña incorrecta!'});
                     })
                 } else if (resul.length == 0) {
